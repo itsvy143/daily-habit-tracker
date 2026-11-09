@@ -1,4 +1,3 @@
-
 // ========================================
 // 1. GET HTML ELEMENTS
 // ========================================
@@ -19,7 +18,7 @@ let habits = JSON.parse(localStorage.getItem("habits")) || [];
 
 // Save habits to localStorage
 function saveHabits() {
-    localStorage.setItem("habits", JSON.stringify(habits));
+  localStorage.setItem("habits", JSON.stringify(habits));
 }
 
 // ========================================
@@ -27,15 +26,15 @@ function saveHabits() {
 // ========================================
 
 function getTodayDate() {
-    const today = new Date();
+  const today = new Date();
 
-    return (
-        today.getFullYear() +
-        "-" +
-        String(today.getMonth() + 1).padStart(2, "0") +
-        "-" +
-        String(today.getDate()).padStart(2, "0")
-    );
+  return (
+    today.getFullYear() +
+    "-" +
+    String(today.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(today.getDate()).padStart(2, "0")
+  );
 }
 
 // ========================================
@@ -43,64 +42,59 @@ function getTodayDate() {
 // ========================================
 
 function displayHabits() {
-    habitList.innerHTML = "";
+  habitList.innerHTML = "";
 
-    if (habits.length === 0) {
-        const message = document.createElement("p");
+  if (habits.length === 0) {
+    const message = document.createElement("p");
 
-        message.id = "empty-message";
-        message.textContent = "No habits yet. Add your first habit!";
+    message.id = "empty-message";
+    message.textContent = "No habits yet. Add your first habit!";
 
-        habitList.appendChild(message);
+    habitList.appendChild(message);
+  }
+
+  habits.forEach(function (habit) {
+    const habitCard = document.createElement("div");
+    habitCard.className = "habit-card";
+
+    // Create checkbox
+    const checkbox = document.createElement("input");
+
+    checkbox.type = "checkbox";
+    checkbox.checked = habit.completedDate === getTodayDate();
+    checkbox.dataset.id = habit.id;
+    checkbox.className = "habit-checkbox";
+
+    // Create habit name
+    const name = document.createElement("span");
+
+    name.textContent = habit.name;
+
+    if (habit.completedDate === getTodayDate()) {
+      name.className = "completed-habit";
     }
 
-    habits.forEach(function (habit) {
-        const habitCard = document.createElement("div");
-        habitCard.className = "habit-card";
+    // Create Edit button
+    const editButton = document.createElement("button");
 
-        // Create checkbox
-        const checkbox = document.createElement("input");
+    editButton.textContent = "Edit";
+    editButton.className = "edit-button";
+    editButton.dataset.id = habit.id;
 
-        checkbox.type = "checkbox";
-        checkbox.checked = habit.completedDate === getTodayDate();
-        checkbox.dataset.id = habit.id;
-        checkbox.className = "habit-checkbox";
+    // Create Delete button
+    const deleteButton = document.createElement("button");
 
-        // Create habit name
-        const name = document.createElement("span");
+    deleteButton.textContent = "Delete";
+    deleteButton.className = "delete-button";
+    deleteButton.dataset.id = habit.id;
 
-        name.textContent = habit.name;
+    // Add elements to habit card
+    habitCard.append(checkbox, name, editButton, deleteButton);
 
-        if (habit.completedDate === getTodayDate()) {
-            name.className = "completed-habit";
-        }
+    habitList.appendChild(habitCard);
+  });
 
-        // Create Edit button
-        const editButton = document.createElement("button");
-
-        editButton.textContent = "Edit";
-        editButton.className = "edit-button";
-        editButton.dataset.id = habit.id;
-
-        // Create Delete button
-        const deleteButton = document.createElement("button");
-
-        deleteButton.textContent = "Delete";
-        deleteButton.className = "delete-button";
-        deleteButton.dataset.id = habit.id;
-
-        // Add elements to habit card
-        habitCard.append(
-            checkbox,
-            name,
-            editButton,
-            deleteButton
-        );
-
-        habitList.appendChild(habitCard);
-    });
-
-    updateProgress();
+  updateProgress();
 }
 
 // ========================================
@@ -108,24 +102,24 @@ function displayHabits() {
 // ========================================
 
 habitForm.addEventListener("submit", function (event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    const newHabit = {
-        id: Date.now(),
-        name: habitName.value.trim(),
-        completedDate: null
-    };
+  const newHabit = {
+    id: Date.now(),
+    name: habitName.value.trim(),
+    completedDate: null,
+  };
 
-    if (newHabit.name === "") {
-        return;
-    }
+  if (newHabit.name === "") {
+    return;
+  }
 
-    habits.push(newHabit);
+  habits.push(newHabit);
 
-    saveHabits();
-    displayHabits();
+  saveHabits();
+  displayHabits();
 
-    habitForm.reset();
+  habitForm.reset();
 });
 
 // ========================================
@@ -133,23 +127,21 @@ habitForm.addEventListener("submit", function (event) {
 // ========================================
 
 function updateProgress() {
-    const totalHabits = habits.length;
+  const totalHabits = habits.length;
 
-    const completedHabits = habits.filter(function (habit) {
-        return habit.completedDate === getTodayDate();
-    }).length;
+  const completedHabits = habits.filter(function (habit) {
+    return habit.completedDate === getTodayDate();
+  }).length;
 
-    const percentage =
-        totalHabits === 0
-            ? 0
-            : Math.round((completedHabits / totalHabits) * 100);
+  const percentage =
+    totalHabits === 0 ? 0 : Math.round((completedHabits / totalHabits) * 100);
 
-    progressText.textContent = percentage + "% Completed";
+  progressText.textContent = percentage + "% Completed";
 
-    progressFill.style.width = percentage + "%";
+  progressFill.style.width = percentage + "%";
 
-    habitSummary.textContent =
-        completedHabits + " of " + totalHabits + " habits completed";
+  habitSummary.textContent =
+    completedHabits + " of " + totalHabits + " habits completed";
 }
 
 // ========================================
@@ -157,27 +149,24 @@ function updateProgress() {
 // ========================================
 
 function editHabit(habitId) {
-    const selectedHabit = habits.find(function (habit) {
-        return habit.id === habitId;
-    });
+  const selectedHabit = habits.find(function (habit) {
+    return habit.id === habitId;
+  });
 
-    if (!selectedHabit) {
-        return;
-    }
+  if (!selectedHabit) {
+    return;
+  }
 
-    const newName = prompt(
-        "Enter the new habit name:",
-        selectedHabit.name
-    );
+  const newName = prompt("Enter the new habit name:", selectedHabit.name);
 
-    if (newName === null || newName.trim() === "") {
-        return;
-    }
+  if (newName === null || newName.trim() === "") {
+    return;
+  }
 
-    selectedHabit.name = newName.trim();
+  selectedHabit.name = newName.trim();
 
-    saveHabits();
-    displayHabits();
+  saveHabits();
+  displayHabits();
 }
 
 // ========================================
@@ -185,38 +174,38 @@ function editHabit(habitId) {
 // ========================================
 
 habitList.addEventListener("click", function (event) {
-    const habitId = Number(event.target.dataset.id);
+  const habitId = Number(event.target.dataset.id);
 
-    // Check or uncheck a habit
-    if (event.target.classList.contains("habit-checkbox")) {
-        const selectedHabit = habits.find(function (habit) {
-            return habit.id === habitId;
-        });
+  // Check or uncheck a habit
+  if (event.target.classList.contains("habit-checkbox")) {
+    const selectedHabit = habits.find(function (habit) {
+      return habit.id === habitId;
+    });
 
-        if (selectedHabit) {
-            selectedHabit.completedDate = event.target.checked
-                ? getTodayDate()
-                : null;
+    if (selectedHabit) {
+      selectedHabit.completedDate = event.target.checked
+        ? getTodayDate()
+        : null;
 
-            saveHabits();
-            displayHabits();
-        }
+      saveHabits();
+      displayHabits();
     }
+  }
 
-    // Edit a habit
-    if (event.target.classList.contains("edit-button")) {
-        editHabit(habitId);
-    }
+  // Edit a habit
+  if (event.target.classList.contains("edit-button")) {
+    editHabit(habitId);
+  }
 
-    // Delete a habit
-    if (event.target.classList.contains("delete-button")) {
-        habits = habits.filter(function (habit) {
-            return habit.id !== habitId;
-        });
+  // Delete a habit
+  if (event.target.classList.contains("delete-button")) {
+    habits = habits.filter(function (habit) {
+      return habit.id !== habitId;
+    });
 
-        saveHabits();
-        displayHabits();
-    }
+    saveHabits();
+    displayHabits();
+  }
 });
 
 // ========================================
