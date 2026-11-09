@@ -1,5 +1,7 @@
 
+// ========================================
 // 1. GET HTML ELEMENTS
+// ========================================
 
 const habitForm = document.getElementById("habit-form");
 const habitName = document.getElementById("habit-name");
@@ -9,15 +11,20 @@ const progressText = document.getElementById("progress-text");
 const progressFill = document.getElementById("progress-fill");
 const habitSummary = document.getElementById("habit-summary");
 
-
-// 2. STORE HABITS
-
+// ========================================
+// 2. LOAD SAVED HABITS
+// ========================================
 
 let habits = JSON.parse(localStorage.getItem("habits")) || [];
 
+// Save habits to localStorage
+function saveHabits() {
+    localStorage.setItem("habits", JSON.stringify(habits));
+}
 
+// ========================================
 // 3. GET TODAY'S DATE
-
+// ========================================
 
 function getTodayDate() {
     const today = new Date();
@@ -31,9 +38,9 @@ function getTodayDate() {
     );
 }
 
-
+// ========================================
 // 4. DISPLAY ALL HABITS
-
+// ========================================
 
 function displayHabits() {
     habitList.innerHTML = "";
@@ -96,9 +103,9 @@ function displayHabits() {
     updateProgress();
 }
 
-
+// ========================================
 // 5. ADD A NEW HABIT
-
+// ========================================
 
 habitForm.addEventListener("submit", function (event) {
     event.preventDefault();
@@ -115,14 +122,15 @@ habitForm.addEventListener("submit", function (event) {
 
     habits.push(newHabit);
 
+    saveHabits();
     displayHabits();
 
     habitForm.reset();
 });
 
-
+// ========================================
 // 6. UPDATE TODAY'S PROGRESS
-
+// ========================================
 
 function updateProgress() {
     const totalHabits = habits.length;
@@ -144,9 +152,9 @@ function updateProgress() {
         completedHabits + " of " + totalHabits + " habits completed";
 }
 
-
+// ========================================
 // 7. EDIT A HABIT
-
+// ========================================
 
 function editHabit(habitId) {
     const selectedHabit = habits.find(function (habit) {
@@ -168,11 +176,13 @@ function editHabit(habitId) {
 
     selectedHabit.name = newName.trim();
 
+    saveHabits();
     displayHabits();
 }
 
+// ========================================
 // 8. HANDLE CHECKBOX, EDIT, AND DELETE
-
+// ========================================
 
 habitList.addEventListener("click", function (event) {
     const habitId = Number(event.target.dataset.id);
@@ -188,6 +198,7 @@ habitList.addEventListener("click", function (event) {
                 ? getTodayDate()
                 : null;
 
+            saveHabits();
             displayHabits();
         }
     }
@@ -203,12 +214,13 @@ habitList.addEventListener("click", function (event) {
             return habit.id !== habitId;
         });
 
+        saveHabits();
         displayHabits();
     }
 });
 
-
+// ========================================
 // 9. DISPLAY INITIAL HABIT LIST
-
+// ========================================
 
 displayHabits();
